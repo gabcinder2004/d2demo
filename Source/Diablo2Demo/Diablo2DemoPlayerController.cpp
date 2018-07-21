@@ -1,7 +1,7 @@
 // Copyright 1998-2018 Epic Games, Inc. All Rights Reserved.
 
 #include "Diablo2DemoPlayerController.h"
-#include "AI/Navigation/NavigationSystem.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Runtime/Engine/Classes/Components/DecalComponent.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Diablo2DemoCharacter.h"
@@ -46,14 +46,13 @@ void ADiablo2DemoPlayerController::OnResetVR()
 
 void ADiablo2DemoPlayerController::MoveToMouseCursor()
 {
-
 	if (UHeadMountedDisplayFunctionLibrary::IsHeadMountedDisplayEnabled())
 	{
 		if (ADiablo2DemoCharacter* MyPawn = Cast<ADiablo2DemoCharacter>(GetPawn()))
 		{
 			if (MyPawn->GetCursorToWorld())
 			{
-				UNavigationSystem::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
+				//UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, MyPawn->GetCursorToWorld()->GetComponentLocation());
 			}
 		}
 	}
@@ -91,15 +90,14 @@ void ADiablo2DemoPlayerController::SetNewMoveDestination(const FVector DestLocat
 	APawn* const MyPawn = GetPawn();
 	if (MyPawn)
 	{
-		UNavigationSystem* const NavSys = GetWorld()->GetNavigationSystem();
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 
 		// We need to issue move command only if far enough in order for walk animation to play correctly
-		if (NavSys && (Distance > 120.0f))
+		if ((Distance > 120.0f))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), Distance);
+			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 
-			NavSys->SimpleMoveToLocation(this, DestLocation);
 		}
 	}
 }
