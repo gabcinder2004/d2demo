@@ -6,6 +6,7 @@
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Diablo2DemoCharacter.h"
 #include "Engine/World.h"
+#include "EnemyBase.h"
 
 ADiablo2DemoPlayerController::ADiablo2DemoPlayerController()
 {
@@ -58,15 +59,39 @@ void ADiablo2DemoPlayerController::MoveToMouseCursor()
 	}
 	else
 	{
-		// Trace to see what is under the mouse cursor
+		// Trace to see what is under tactorhe mouse cursor
 		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, false, Hit);
+		GetHitResultUnderCursor(ECC_Pawn, false, Hit);
+		auto ActorHit = Hit.GetActor();
+		if (ActorHit) {
+			UE_LOG(LogTemp, Warning, TEXT("%s"), *ActorHit->GetName());
+		}
+
+		auto result = Cast<ACharacter>(ActorHit);
+
+		FVector moveSpot;
+		bool actorHit = false;
+
+		if (result) {
+			UE_LOG(LogTemp, Warning, TEXT("Actor hit!"));
+			APawn* const MyPawn = GetPawn();
+			auto pawnVector = MyPawn->GetActorLocation();
+			
+			moveSpot = (Hit.ImpactPoint + pawnVector)/2;
+			float Distance = FVector::Dist(Hit.ImpactPoint, moveSpot);
+			while (Distance > 90.0f) {
+				moveSpot = (Hit.ImpactPoint + moveSpot) / 2;
+				Distance = FVector::Dist(Hit.ImpactPoint, moveSpot);
+			}
+		}
+		else {
+			moveSpot = Hit.ImpactPoint;
+		}
 
 		if (Hit.bBlockingHit)
 		{
-
 			// We hit something, move there
-			SetNewMoveDestination(Hit.ImpactPoint);
+			SetNewMoveDestination(moveSpot);
 		}
 	}
 }
@@ -78,15 +103,16 @@ void ADiablo2DemoPlayerController::MoveToTouchLocation(const ETouchIndex::Type F
 	// Trace to see what is under the touch location
 	FHitResult HitResult;
 	GetHitResultAtScreenPosition(ScreenSpaceLocation, CurrentClickTraceChannel, true, HitResult);
+
 	if (HitResult.bBlockingHit)
 	{
-		// We hit something, move there
 		SetNewMoveDestination(HitResult.ImpactPoint);
 	}
 }
 
 void ADiablo2DemoPlayerController::SetNewMoveDestination(const FVector DestLocation)
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Poop %s"))
 	APawn* const MyPawn = GetPawn();
 	if (MyPawn)
 	{
