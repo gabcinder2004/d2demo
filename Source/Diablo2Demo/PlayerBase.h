@@ -13,6 +13,11 @@ UCLASS()
 class DIABLO2DEMO_API APlayerBase : public ADiablo2DemoCharacter
 {
 	GENERATED_BODY()
+public:
+	UFUNCTION(BlueprintImplementableEvent, category = "AttackEvent")
+	void OnMobTargeted(AEnemyBase* targetEnemy);
+	UFUNCTION(BlueprintImplementableEvent, category = "AttackEvent")
+		void OnMobUnTarget();
 	
 	
 	

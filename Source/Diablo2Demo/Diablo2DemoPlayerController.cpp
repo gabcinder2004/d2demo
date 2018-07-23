@@ -7,6 +7,7 @@
 #include "Diablo2DemoCharacter.h"
 #include "Engine/World.h"
 #include "EnemyBase.h"
+#include "PlayerBase.h"
 
 ADiablo2DemoPlayerController::ADiablo2DemoPlayerController()
 {
@@ -67,15 +68,15 @@ void ADiablo2DemoPlayerController::MoveToMouseCursor()
 			UE_LOG(LogTemp, Warning, TEXT("%s"), *ActorHit->GetName());
 		}
 
-		auto result = Cast<ACharacter>(ActorHit);
+		auto result = Cast<AEnemyBase>(ActorHit);
 
 		FVector moveSpot;
 		bool actorHit = false;
-
+		APawn* const MyPawn = GetPawn();
+		auto player = Cast<APlayerBase>(MyPawn);
 		if (result) {
-			UE_LOG(LogTemp, Warning, TEXT("Actor hit!"));
-			APawn* const MyPawn = GetPawn();
-			auto pawnVector = MyPawn->GetActorLocation();
+			auto pawnVector = player->GetActorLocation();
+			player->OnMobTargeted(result);
 			
 			moveSpot = (Hit.ImpactPoint + pawnVector)/2;
 			float Distance = FVector::Dist(Hit.ImpactPoint, moveSpot);
@@ -86,6 +87,7 @@ void ADiablo2DemoPlayerController::MoveToMouseCursor()
 		}
 		else {
 			moveSpot = Hit.ImpactPoint;
+			player->OnMobUnTarget();
 		}
 
 		if (Hit.bBlockingHit)
@@ -125,6 +127,7 @@ void ADiablo2DemoPlayerController::SetNewMoveDestination(const FVector DestLocat
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 
 		}
+		UE_LOG(LogTemp, Warning, TEXT("Finished Move"));
 	}
 }
 
