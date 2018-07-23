@@ -71,25 +71,35 @@ void ADiablo2DemoPlayerController::MoveToMouseCursor()
 		auto result = Cast<AEnemyBase>(ActorHit);
 
 		FVector moveSpot;
-		bool actorHit = false;
+		bool move = true;
 		APawn* const MyPawn = GetPawn();
 		auto player = Cast<APlayerBase>(MyPawn);
 		if (result) {
 			auto pawnVector = player->GetActorLocation();
 			player->OnMobTargeted(result);
-			moveSpot = (Hit.ImpactPoint + pawnVector)/2;
-			float Distance = FVector::Dist(Hit.ImpactPoint, moveSpot);
-			while (Distance > 90.0f) {
-				moveSpot = (Hit.ImpactPoint + moveSpot) / 2;
-				Distance = FVector::Dist(Hit.ImpactPoint, moveSpot);
+			auto hitLocation = result->GetActorLocation();
+			moveSpot = Hit.ImpactPoint;
+	/*		float initialDistance = FVector::Dist(hitLocation, pawnVector);
+			UE_LOG(LogTemp, Warning, TEXT("Init: %f"), initialDistance);
+			if (initialDistance > 90.0f) {
+				moveSpot = (hitLocation + pawnVector) / 2;
+				float Distance = FVector::Dist(hitLocation, moveSpot);
+				while (Distance > 90.0f) {
+					moveSpot = (hitLocation + moveSpot) / 2;
+					Distance = FVector::Dist(hitLocation, moveSpot);
+				}
 			}
+			else {
+				UE_LOG(LogTemp, Warning, TEXT("No move"));
+				move = false;
+			}*/
 		}
 		else {
 			moveSpot = Hit.ImpactPoint;
 			player->OnMobUnTarget();
 		}
 
-		if (Hit.bBlockingHit)
+		if (Hit.bBlockingHit && move)
 		{
 			// We hit something, move there
 			SetNewMoveDestination(moveSpot);
@@ -120,7 +130,7 @@ void ADiablo2DemoPlayerController::SetNewMoveDestination(const FVector DestLocat
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
 		UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), Distance);
 
-		if ((Distance > 120.0f))
+		if ((Distance > 50.0f))
 		{
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 		}
