@@ -77,7 +77,6 @@ void ADiablo2DemoPlayerController::MoveToMouseCursor()
 		if (result) {
 			auto pawnVector = player->GetActorLocation();
 			player->OnMobTargeted(result);
-			
 			moveSpot = (Hit.ImpactPoint + pawnVector)/2;
 			float Distance = FVector::Dist(Hit.ImpactPoint, moveSpot);
 			while (Distance > 90.0f) {
@@ -119,15 +118,12 @@ void ADiablo2DemoPlayerController::SetNewMoveDestination(const FVector DestLocat
 	if (MyPawn)
 	{
 		float const Distance = FVector::Dist(DestLocation, MyPawn->GetActorLocation());
+		UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), Distance);
 
-		// We need to issue move command only if far enough in order for walk animation to play correctly
 		if ((Distance > 120.0f))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Distance: %f"), Distance);
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
-
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Finished Move"));
 	}
 }
 
@@ -140,5 +136,6 @@ void ADiablo2DemoPlayerController::OnSetDestinationPressed()
 void ADiablo2DemoPlayerController::OnSetDestinationReleased()
 {
 	// clear flag to indicate we should stop updating the destination
+	// Can use this to know when mouse released
 	bMoveToMouseCursor = false;
 }
