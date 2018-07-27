@@ -18,6 +18,10 @@ public:
 	void OnMobTargeted(AEnemyBase* targetEnemy);
 	UFUNCTION(BlueprintImplementableEvent, category = "AttackEvent")
 		void OnMobUnTarget();
+	UFUNCTION(BlueprintImplementableEvent, category = "RightAttackEvent")
+		void OnRightMouseClicked(AActor* targetEnemy);
+	UFUNCTION(BlueprintImplementableEvent, category = "RightAttackEvent")
+		void OnRightMouseReleased();
 	
 	
 	

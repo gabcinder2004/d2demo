@@ -33,6 +33,8 @@ void ADiablo2DemoPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &ADiablo2DemoPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &ADiablo2DemoPlayerController::OnSetDestinationReleased);
+	InputComponent->BindAction("TargetRightClick", IE_Pressed, this, &ADiablo2DemoPlayerController::OnRightClickPressed);
+	InputComponent->BindAction("TargetRightClick", IE_Released, this, &ADiablo2DemoPlayerController::OnRightClickReleased);
 
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ADiablo2DemoPlayerController::MoveToTouchLocation);
@@ -135,6 +137,28 @@ void ADiablo2DemoPlayerController::SetNewMoveDestination(const FVector DestLocat
 			UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, DestLocation);
 		}
 	}
+}
+
+void ADiablo2DemoPlayerController::OnRightClickPressed()
+{
+	APawn* const MyPawn = GetPawn();
+	auto player = Cast<APlayerBase>(MyPawn);
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Pawn, false, Hit);
+	auto ActorHit = Hit.GetActor();
+	if (ActorHit) {
+		player->OnRightMouseClicked(ActorHit);
+	}
+	else {
+		player->OnRightMouseClicked(NULL);
+	}
+}
+
+void ADiablo2DemoPlayerController::OnRightClickReleased()
+{
+	APawn* const MyPawn = GetPawn();
+	auto player = Cast<APlayerBase>(MyPawn);
+	player->OnRightMouseReleased();
 }
 
 void ADiablo2DemoPlayerController::OnSetDestinationPressed()
