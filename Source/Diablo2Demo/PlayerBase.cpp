@@ -3,5 +3,7 @@
 #include "PlayerBase.h"
 
 
-
+void APlayerBase::Test() {
+	UE_LOG(LogTemp, Warning, TEXT("YoCustom"));
+}
 

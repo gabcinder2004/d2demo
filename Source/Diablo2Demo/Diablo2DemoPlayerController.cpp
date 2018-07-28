@@ -147,10 +147,10 @@ void ADiablo2DemoPlayerController::OnRightClickPressed()
 	GetHitResultUnderCursor(ECC_Pawn, false, Hit);
 	auto ActorHit = Hit.GetActor();
 	if (ActorHit) {
-		player->OnRightMouseClicked(ActorHit);
+		player->OnRightMouseClicked(ActorHit, Hit.ImpactPoint);
 	}
 	else {
-		player->OnRightMouseClicked(NULL);
+		player->OnRightMouseClicked(NULL, Hit.ImpactPoint);
 	}
 }
 
