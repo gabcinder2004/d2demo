@@ -23,7 +23,11 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, category = "RightAttackEvent")
 		void OnRightMouseReleased();
 	UFUNCTION(BlueprintCallable)
-		void Test();
+		void DrinkHpPotion();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float MaxHealth = 200;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		float Health = 200;
 	
 	
 	
