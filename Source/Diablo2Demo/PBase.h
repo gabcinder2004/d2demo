@@ -1,19 +1,19 @@
- // Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "EnemyBase.generated.h"
+#include "PBase.generated.h"
 
 UCLASS()
-class DIABLO2DEMO_API AEnemyBase : public ACharacter
+class DIABLO2DEMO_API APBase : public ACharacter
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this character's properties
-	AEnemyBase();
+	APBase();
 
 protected:
 	// Called when the game starts or when spawned
